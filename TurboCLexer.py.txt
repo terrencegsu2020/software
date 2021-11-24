@@ -1,0 +1,41 @@
+import ply.lex as create
+#Terrence Gaines CSC 4330
+#This area determines all the reserve words that will be used for my language
+reserved = {'if':'IF','while':'WHILE'}
+
+#This area creates all the symbols that will be recognize for my language
+tokens = ['LBRACE','RBRACE','LPAREN','RPAREN','ASSIGN','SEMI','ID','NUM','OPTR'] + list(reserved.values())
+t_LBRACE = '\\{'
+t_RBRACE = '\\}'
+t_LPAREN = '\\('
+t_RPAREN = '\\)'
+t_ASSIGN = '='
+t_SEMI = ';'
+t_IF = '[iI][fF]'
+t_WHILE = '[wW][hH][iI][lL][eE]'
+
+t_ignore = ' \r\n\t'
+t_ignore_COMMENT = '//.*'
+
+def t_error(t):
+    print("Illegal character '%s'" % t.value[0])
+    raise Exception('LEXER ERROR')
+
+def t_OPTR(t):
+    r"""(>=|<=|==|>|<|\+|\-|\*|/)"""
+    t.type = 'OPTR'
+    return t
+
+def t_ID(t):
+    """[a-zA-Z][_a-zA-Z0-9]*"""
+    t.type = reserved.get(t.value.lower(), 'ID')
+    return t
+
+def t_NUM(t):
+    r"""[+-]?[0-9]+(\.[0-9]*)?"""
+    t.value = float(t.value)
+    t.type = 'NUM'
+    return t
+
+lexer = create.lex()
+
